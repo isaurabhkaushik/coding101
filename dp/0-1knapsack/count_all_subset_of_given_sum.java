@@ -1,0 +1,60 @@
+/*
+Source: https://practice.geeksforgeeks.org/problems/perfect-sum-problem5633/1#
+Input: N = 6, arr[] = {2, 3, 5, 6, 8, 10}
+       sum = 10
+Output: 3
+Explanation: {2, 3, 5}, {2, 8}, {10}
+
+Input: N = 5, arr[] = {1, 2, 3, 4, 5}
+       sum = 10
+Output: 3
+Explanation: {1, 2, 3, 4}, {1, 4, 5},
+             {2, 3, 5}
+*/
+
+class Solution{
+
+    int[][] T;
+
+	public int perfectSum(int nums[],int n, int sum)
+	{
+	    // for handling zeroes in input i used a workaround in which i am counting & removing all zeroes
+	    // from input and finding size of power set formed using all zeroes and then multiplying this with
+	    // count of subsets(all non zeroes) having sum equal to given sum.
+	    int numOfZeroes = 0;
+        for(int i=0;i<nums.length;i++)
+            if(nums[i] == 0)
+                numOfZeroes++;
+
+        if(numOfZeroes > 0){
+            int[] arr = new int[numOfZeroes];
+            int j=0;
+    	    for(int i=0;i<nums.length;i++){
+    	        if(nums[i] != 0)    arr[j++] = nums[i];
+    	    }
+    	    return (int) Math.pow(2,numOfZeroes) * modifiedSubsetSum(arr, sum, arr.length);
+        }
+
+        return modifiedSubsetSum(nums, sum, nums.length);
+	}
+
+    private int modifiedSubsetSum(int[] arr, int sum, int size){
+        //Initialize T Array
+        T = new int[size+1][sum+1];
+        for(int i=0;i<size+1;i++)
+            for(int j=0;j<sum+1;j++){
+                if(i == 0){
+                    T[i][j] = 0;
+                }
+                if(j == 0) {
+                    T[i][j] = 1;
+                }
+            }
+
+        // Choice Diagram Implementation
+        for(int i=1;i<size+1;i++)
+            for(int j=1;j<sum+1;j++)
+                T[i][j] = (arr[i-1] <= j)?(T[i-1][j-arr[i-1]] + T[i-1][j])%1000000007:T[i-1][j]%1000000007;
+        return T[size][sum]%1000000007;
+    }
+}
