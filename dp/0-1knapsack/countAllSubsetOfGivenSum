@@ -16,12 +16,12 @@ class Solution{
 
     int[][] T;
 
-	public int perfectSum(int nums[],int n, int sum)
-	{
-	    // for handling zeroes in input i used a workaround in which i am counting & removing all zeroes
-	    // from input and finding size of power set formed using all zeroes and then multiplying this with
-	    // count of subsets(all non zeroes) having sum equal to given sum.
-	    int numOfZeroes = 0;
+    public int perfectSum(int nums[],int n, int sum)
+    {
+        // for handling zeroes in input i used a workaround in which i am counting & removing all zeroes
+        // from input and finding size of power set formed using all zeroes and then multiplying this with
+        // count of subsets(all non zeroes) having sum equal to given sum.
+        int numOfZeroes = 0;
         for(int i=0;i<nums.length;i++)
             if(nums[i] == 0)
                 numOfZeroes++;
@@ -29,14 +29,14 @@ class Solution{
         if(numOfZeroes > 0){
             int[] arr = new int[numOfZeroes];
             int j=0;
-    	    for(int i=0;i<nums.length;i++){
-    	        if(nums[i] != 0)    arr[j++] = nums[i];
-    	    }
-    	    return (int) Math.pow(2,numOfZeroes) * modifiedSubsetSum(arr, sum, arr.length);
+            for(int i=0;i<nums.length;i++){
+                if(nums[i] != 0)    arr[j++] = nums[i];
+            }
+            return (int) Math.pow(2,numOfZeroes) * modifiedSubsetSum(arr, sum, arr.length);
         }
 
         return modifiedSubsetSum(nums, sum, nums.length);
-	}
+    }
 
     private int modifiedSubsetSum(int[] arr, int sum, int size){
         //Initialize T Array
