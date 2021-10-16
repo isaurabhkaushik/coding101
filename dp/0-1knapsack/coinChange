@@ -1,0 +1,58 @@
+/*
+Source: https://leetcode.com/problems/coin-change/
+
+Input: coins = [1,2,5], amount = 11
+Output: 3
+Explanation: 11 = 5 + 5 + 1
+
+Input: coins = [2], amount = 3
+Output: -1
+
+Input: coins = [1], amount = 0
+Output: 0
+*/
+
+class Solution {
+    int[][] dp;
+
+    public int coinChange(int[] coins, int amount) {
+        dp = new int[coins.length+1][amount+1];
+        for(int i = 0; i < coins.length+1; i++)
+            for(int j = 0; j < amount+1; j++)
+                dp[i][j] = Integer.MAX_VALUE;
+
+        int result = getMinimumCoins(coins, amount, coins.length);
+        if(result == Integer.MAX_VALUE-1)
+            return -1;
+        return result;
+    }
+
+    // Recursive
+    private int getMinimumCoins(int[] arr, int sum, int size) {
+        // Initialization
+        if(sum == 0)
+            if(size == 0) return Integer.MAX_VALUE-1;
+            else return 0;
+        else if(size == 0) return Integer.MAX_VALUE-1;
+        // Choice Diagram
+        if(dp[size][sum] == Integer.MAX_VALUE)
+            dp[size][sum] = (arr[size - 1] <= sum)?Math.min((getMinimumCoins(arr, sum - arr[size - 1], size) + 1), getMinimumCoins(arr, sum, size - 1)):getMinimumCoins(arr, sum, size - 1);
+        return dp[size][sum];
+    }
+
+    // Iterative
+    private int getMinimumCoins(int[] arr, int sum, int size){
+        // Initialization
+        for(int i = 0; i < size+1; i++)
+            for(int j = 0; j < sum+1; j++)
+                if(j == 0)
+                    if(i == 0) dp[i][j] = Integer.MAX_VALUE-1;
+                    else dp[i][j] = 0;
+                else if(i == 0) dp[i][j] = Integer.MAX_VALUE-1;
+        // Choice Diagram
+        for(int i = 1; i < size+1; i++)
+            for(int j = 1; j < sum+1; j++)
+                dp[i][j] = (arr[i - 1] <= j)?Math.min(dp[i][j - arr[i - 1]] + 1, dp[i-1][j]):dp[i-1][j];
+        return dp[size][sum];
+    }
+}
